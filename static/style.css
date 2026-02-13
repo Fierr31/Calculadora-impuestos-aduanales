@@ -1,0 +1,79 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f6f7fb;
+  color: #222;
+}
+
+.main {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.entradas,
+#resultado,
+.producto-detalle {
+  background: #fff;
+  border-radius: 10px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.subtotal {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin-top: 1rem;
+}
+
+input,
+button {
+  padding: 0.65rem;
+  border-radius: 8px;
+  border: 1px solid #ccd4e0;
+}
+
+.autocomplete-container {
+  position: relative;
+}
+
+.sugerencias {
+  position: absolute;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid #ccd4e0;
+  border-radius: 8px;
+  margin-top: 4px;
+  display: none;
+  max-height: 250px;
+  overflow-y: auto;
+  z-index: 10;
+}
+
+.sugerencia-item {
+  width: 100%;
+  text-align: left;
+  border: none;
+  border-bottom: 1px solid #eef2f8;
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.sugerencia-item:hover {
+  background: #f0f5ff;
+}
+
+.sugerencia-item.vacio {
+  cursor: default;
+}
+
+.detalle-grid {
+  display: grid;
+  gap: 0.5rem;
+}
