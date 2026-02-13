@@ -1,3 +1,27 @@
-from flask import Flask
+from backend.sugerencias import autocompletado
+from fastapi import FastAPI, Query, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 
-@app.route()
+app = FastAPI()
+
+# Permitir peticiones desde tu frontend
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # en producción restringe esto
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+@app.get("/autocomplete")
+def autocomplete(q: str = Query(..., min_length=1, max_length=50)):
+    try:
+        q = q.strip()
+
+        if not q:
+            return {"resultados": []}
+        resultados = autocompletado(q)
+        return {"resultados": resultados}
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    
