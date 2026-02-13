@@ -9,26 +9,23 @@ engine = create_engine(
 os.getenv("DATABASE_URL")
 )
 
-def obtener(palabra):
-
-    palabra = palabra.strip()
-
-    if len(palabra) > 50:
-        raise ValueError("Texto demasiado largo")
+def obtener(id):
 
     query = text("""
         SELECT *
         FROM fracciones_arancelarias
-        WHERE descripcion = :busqueda
+        WHERE id = :id
         LIMIT 1
     """)
 
     with engine.connect() as conn:
-        df = pd.read_sql(query, conn, params={
-            "busqueda": palabra
-        })
+        result = conn.execute(query, {"id": id})
+        row = result.mappings().first()
 
-    return df
+    if not row:
+        return {}
 
-result = obtener("Harina de maíz.")
-print(result)
+    return dict(row)
+
+#result = obtener("1888")
+#print(result)

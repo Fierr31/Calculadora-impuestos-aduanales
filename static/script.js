@@ -24,11 +24,16 @@ input.addEventListener("input", () => {
 
                 data.resultados.forEach(item => {
                     const li = document.createElement("li");
-                    li.textContent = item;
+                    li.textContent = item.descripcion;
+
+                    // Guardamos el id como atributo oculto
+                    li.dataset.id = item.id;
 
                     li.addEventListener("click", () => {
-                        input.value = item;
+                        input.value = item.descripcion;
                         lista.innerHTML = "";
+
+                        obtenerProducto(item.id);
                     });
 
                     lista.appendChild(li);
@@ -36,3 +41,11 @@ input.addEventListener("input", () => {
             });
     }, 600);
 });
+
+function obtenerProducto(id) {
+    fetch(`http://localhost:8000/producto/${id}`)
+        .then(response => response.json())
+        .then(data => {
+            mostrarResultado(data);
+        });
+}

@@ -1,4 +1,5 @@
 from backend.sugerencias import autocompletado
+from backend.consulta import obtener
 from fastapi import FastAPI, Query, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -25,3 +26,6 @@ def autocomplete(q: str = Query(..., min_length=1, max_length=50)):
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
     
+@app.get("/producto/{id}")
+def consulta(id: int):
+    obtener(id)

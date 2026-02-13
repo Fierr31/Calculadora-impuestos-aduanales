@@ -19,7 +19,7 @@ def autocompletado(palabra):
     
 
     query = text("""
-        SELECT descripcion
+        SELECT id, descripcion
         FROM fracciones_arancelarias
         WHERE descripcion ILIKE :busqueda
         LIMIT 20
@@ -30,8 +30,10 @@ def autocompletado(palabra):
             "busqueda": f"%{palabra}%"
         })
 
-    return df["descripcion"].drop_duplicates().tolist()
+    df = df.drop_duplicates(subset=["id"])
+
+    return df.to_dict(orient="records")
 
 
-result = autocompletado("Maíz")
-print(result)
+#result = autocompletado("Maíz")
+#print(result)
