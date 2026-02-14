@@ -48,4 +48,5 @@ class DatosEntrada(BaseModel):
 @app.post("/calcular")
 def calcular(datos: DatosEntrada):
     calculos = basegravable(datos)
+    lit = 0
     return calculos
