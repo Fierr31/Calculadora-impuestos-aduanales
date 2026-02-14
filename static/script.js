@@ -95,3 +95,29 @@ function procesarDatos(datos) {
     console.log("Procesando:", datos);
     // Aquí haces cálculos de impuestos, totales, etc.
 }
+
+document.getElementById("calcularBtn").addEventListener("click", async () => {
+
+    const precio = document.getElementById("preciounit").value;
+    const cantidad = document.getElementById("cantidad").value;
+    const pais = document.getElementById("pais").value;
+    const flete = document.getElementById("flete").value;
+    const seguro = document.getElementById("seguro").value;
+
+    const response = await fetch("/calcular", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            precio: parseFloat(precio),
+            cantidad: parseInt(cantidad),
+            pais: pais,
+            flete: parseFloat(flete),
+            seguro: parseFloat(seguro)
+        })
+    });
+
+    const data = await response.json();
+    document.getElementById("resultadoContenido").innerText = JSON.stringify(data);
+});

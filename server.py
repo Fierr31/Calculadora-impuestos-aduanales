@@ -1,7 +1,9 @@
 from backend.sugerencias import autocompletado
 from backend.consulta import obtener
+from backend.calculadora import basegravable
 from fastapi import FastAPI, Query, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
 
 app = FastAPI()
 
@@ -34,3 +36,16 @@ def consulta(id: int):
     #except ValueError as e:
     #    raise HTTPException(status_code=400, detail=str(e))
     
+
+class DatosEntrada(BaseModel):
+    preciounit: float
+    cantidad: int
+    pais: str
+    flete: float
+    seguro: float
+    impuesto: str
+
+@app.post("/calcular")
+def calcular(datos: DatosEntrada):
+    calculos = basegravable(datos)
+    return calculos

@@ -10,7 +10,7 @@ os.getenv("DATABASE_URL")
 )
 
 def obtener(id):
-    print("ID recibido:", id)
+    #print("ID recibido:", id)
 
     query = text("""
         SELECT *
