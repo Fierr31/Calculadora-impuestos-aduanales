@@ -28,4 +28,9 @@ def autocomplete(q: str = Query(..., min_length=1, max_length=50)):
     
 @app.get("/producto/{id}")
 def consulta(id: int):
-    obtener(id)
+    #try:
+    lit = obtener(id)
+    return lit
+    #except ValueError as e:
+    #    raise HTTPException(status_code=400, detail=str(e))
+    

@@ -10,6 +10,7 @@ os.getenv("DATABASE_URL")
 )
 
 def obtener(id):
+    print("ID recibido:", id)
 
     query = text("""
         SELECT *
@@ -25,7 +26,11 @@ def obtener(id):
     if not row:
         return {}
 
-    return dict(row)
+    producto = dict(row)
 
+    producto.pop("id", None)
+    producto.pop("exento", None)
+
+    return producto
 #result = obtener("1888")
 #print(result)
