@@ -92,7 +92,7 @@ function mostrarResultado(data) {
 
 
 function procesarDatos(datos) {
-    //console.log("Procesando:", datos);
+    console.log("Procesando:", datos);
     // Aquí haces cálculos de impuestos, totales, etc.
 }
 
@@ -134,7 +134,7 @@ document.getElementById("calcularBtn").addEventListener("click", async () => {
     });
 
 //console.log("Payload enviado:", payload);
-  
+
 
 if (!response.ok) {
     const errorDetail = await response.json();
@@ -142,7 +142,7 @@ if (!response.ok) {
     return;
 }
 
-    //console.log("Respuesta backend:", response);
+    console.log("Respuesta backend:", response);
 
     const data = await response.json();
     document.getElementById("baseg").innerText = JSON.stringify(data);

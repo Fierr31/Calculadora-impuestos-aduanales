@@ -15,6 +15,16 @@ def basegravable(entradas):
 
     impuesto = entradas.impuesto
 
+    if impuesto == "Prohibida":
+        return {
+        "valor_en_aduana": 0,
+        "igi": 0,
+        "dta": 0,
+        "base_gravable": 0,
+        "porcentaje": 0,
+        "dls_per_cantidad": 0
+    }
+
     try:
         porcentaje = float(impuesto)
         dls_kg = 0
@@ -36,7 +46,7 @@ def basegravable(entradas):
     else:
         dta = (0.008 * va) / 100
 
-    igi = (porcentaje * va) / 100
+    igi = ((porcentaje * va) / 100) + dls_kg * int(entradas.cantidad)
     base_grav = va + igi + dta
 
     return {
