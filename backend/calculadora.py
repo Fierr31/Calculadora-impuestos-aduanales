@@ -15,15 +15,15 @@ def basegravable(entradas):
 
     impuesto = entradas.impuesto
 
-    if len(impuesto) > 3:
+    try:
+        porcentaje = float(impuesto)
+        dls_kg = 0
+    except ValueError:
         porcentaje_match = re.search(r'(\d+(?:\.\d+)?)%', impuesto)
         dls_kg_match = re.search(r'(\d+(?:\.\d+)?)\s*Dls', impuesto)
 
         porcentaje = float(porcentaje_match.group(1)) if porcentaje_match else 0
         dls_kg = float(dls_kg_match.group(1)) if dls_kg_match else 0
-    else:
-        porcentaje = float(impuesto)
-        dls_kg = 0
 
     va = (
         int(entradas.cantidad) * float(entradas.precio)

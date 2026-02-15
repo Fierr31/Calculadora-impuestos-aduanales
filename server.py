@@ -3,7 +3,8 @@ from backend.consulta import obtener
 from backend.calculadora import basegravable
 from fastapi import FastAPI, Query, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
+from typing import Annotated
 
 app = FastAPI()
 
@@ -33,19 +34,18 @@ def autocomplete(q: str = Query(..., min_length=1, max_length=50)):
     
 @app.get("/producto/{id}")
 def consulta(id: int):
-    #try:
-    lit = obtener(id)
-    return lit
-    #except ValueError as e:
-    #    raise HTTPException(status_code=400, detail=str(e))
-    
+    try:
+        lit = obtener(id)
+        return lit
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
 class DatosEntrada(BaseModel):
-    precio: float
-    cantidad: int
-    pais: str
-    flete: float
-    seguro: float
+    precio: float = Field(..., ge=0, le=1_000_000)
+    cantidad: int = Field(..., ge=0, le=1_000_000)
+    pais: Annotated[str, Field(min_length=1, strip_whitespace=True)]
+    flete: float = Field(..., ge=0, le=1_000_000)
+    seguro: float = Field(..., ge=0, le=1_000_000)
     impuesto: str
 
 @app.post("/calcular")
