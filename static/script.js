@@ -1,5 +1,6 @@
 const input = document.getElementById("productoInput");
 const lista = document.getElementById("sugerencias");
+let productoSeleccionado = null;
 
 let timeout = null;
 
@@ -57,8 +58,9 @@ function obtenerProducto(id) {
         });
 }
 
-
 function mostrarResultado(data) {
+    productoSeleccionado = data;  // guardamos el objeto completo
+
     const contenedor = document.getElementById("resultadoContenido");
 
     if (!data || Object.keys(data).length === 0) {
@@ -69,7 +71,6 @@ function mostrarResultado(data) {
     const tabla = document.createElement("table");
 
     for (const clave in data) {
-
         if (clave === "id" || clave === "exento") continue;
 
         const fila = document.createElement("tr");
@@ -87,16 +88,20 @@ function mostrarResultado(data) {
 
     contenedor.innerHTML = "";
     contenedor.appendChild(tabla);
-
-    procesarDatos(data);
 }
 
+
 function procesarDatos(datos) {
-    console.log("Procesando:", datos);
+    //console.log("Procesando:", datos);
     // Aquí haces cálculos de impuestos, totales, etc.
 }
 
 document.getElementById("calcularBtn").addEventListener("click", async () => {
+
+    if (!productoSeleccionado) {
+        alert("Selecciona un producto primero");
+        return;
+    }
 
     const precio = document.getElementById("preciounit").value;
     const cantidad = document.getElementById("cantidad").value;
@@ -104,7 +109,7 @@ document.getElementById("calcularBtn").addEventListener("click", async () => {
     const flete = document.getElementById("flete").value;
     const seguro = document.getElementById("seguro").value;
 
-    const response = await fetch("/calcular", {
+    const response = await fetch("http://localhost:8000/calcular", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -112,12 +117,34 @@ document.getElementById("calcularBtn").addEventListener("click", async () => {
         body: JSON.stringify({
             precio: parseFloat(precio),
             cantidad: parseInt(cantidad),
-            pais: pais,
+            pais: pais.toLowerCase(),
             flete: parseFloat(flete),
-            seguro: parseFloat(seguro)
+            seguro: parseFloat(seguro),
+            impuesto: productoSeleccionado.impuesto
         })
+    })
+    .then(response => response.json())
+    .then(data => {
+    document.getElementById("va").textContent = data.valor_en_aduana.toFixed(2);
+    document.getElementById("igi").textContent = data.igi.toFixed(2);
+    document.getElementById("dta").textContent = data.dta.toFixed(2);
+    document.getElementById("base").textContent = data.base_gravable.toFixed(2);
+
+    document.getElementById("baseg").style.display = "block";
     });
 
+//console.log("Payload enviado:", payload);
+  
+
+if (!response.ok) {
+    const errorDetail = await response.json();
+    console.error("Detalle del error:", errorDetail);
+    return;
+}
+
+    //console.log("Respuesta backend:", response);
+
     const data = await response.json();
-    document.getElementById("resultadoContenido").innerText = JSON.stringify(data);
+    document.getElementById("baseg").innerText = JSON.stringify(data);
 });
+
