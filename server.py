@@ -47,6 +47,7 @@ class DatosEntrada(BaseModel):
     flete: float = Field(..., ge=0, le=1_000_000)
     seguro: float = Field(..., ge=0, le=1_000_000)
     impuesto: str
+    fracc: str
 
 @app.post("/calcular")
 def calcular(datos: DatosEntrada):

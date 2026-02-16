@@ -125,7 +125,8 @@ document.getElementById("calcularBtn").addEventListener("click", async () => {
             pais,
             flete,
             seguro,
-            impuesto: productoSeleccionado.impuesto
+            impuesto: productoSeleccionado.impuesto,
+            fracc: productoSeleccionado.fraccion
         })
     });
 
@@ -146,6 +147,9 @@ document.getElementById("calcularBtn").addEventListener("click", async () => {
     document.getElementById("igi").textContent = data.igi.toFixed(2);
     document.getElementById("dta").textContent = data.dta.toFixed(2);
     document.getElementById("base").textContent = data.base_gravable.toFixed(2);
+    document.getElementById("ieps").textContent = data.ieps.toFixed(2);
+    document.getElementById("total").textContent = data.total.toFixed(2);
+    document.getElementById("iva").textContent = data.iva.toFixed(2);
 
     document.getElementById("baseg").style.display = "block";
 });

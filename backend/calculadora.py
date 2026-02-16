@@ -12,6 +12,7 @@ import re
 tratado = ["alemania", "austria", "australia", "belgica", "bolivia", "brunei", "canada", "chile", "colombia", "costa rica", "cuba", "dinamarca", "el salvador", "eslovaquia", "eslovenia", "españa", "estados unidos", "estonia", "finlandia", "francia", "grecia", "guatemala", "honduras", "hungria", "irlanda", "islandia", "israel", "italia", "japon", "letonia", "liechtenstein", "lituania", "luxemburgo", "malasia", "malta", "nicaragua", "noruega", "nueva zelanda", "paises bajos", "panama", "peru", "polonia", "portugal", "reino unido", "republica checa", "singapur", "suecia", "suiza", "uruguay", "vietnam"]
 
 def basegravable(entradas):
+    fracc = entradas.fracc
 
     impuesto = entradas.impuesto
 
@@ -41,8 +42,24 @@ def basegravable(entradas):
     else:
         dta = (0.008 * va) / 100
 
-    igi = ((porcentaje * va) / 100) + dls_kg * int(entradas.cantidad)
+    igi = ((porcentaje * va) / 100) + (dls_kg*17.16) * int(entradas.cantidad)
     base_grav = va + igi + dta
+
+    if fracc == "2207.10.01":
+        ieps = (base_grav*30)/100
+    elif fracc == "2401.10.02":
+        ieps = (base_grav*200)/100
+    elif fracc == "2705.00.01":
+        ieps = 6.7*float(entradas.cantidad)
+    elif fracc == "0403.20.01":
+        ieps = (base_grav*25)/100
+
+    if ieps != 0:
+        total = (((float(base_grav)+float(ieps))*16.00)/100) + (float(base_grav)+float(ieps))
+    elif ieps == 0:
+        total = ((float(base_grav)*16.00)/100) + float(base_grav)
+
+    iva = ((base_grav+ieps)*16)/100
 
     return {
         "status": "ok",
@@ -51,7 +68,10 @@ def basegravable(entradas):
         "dta": dta,
         "base_gravable": base_grav,
         "porcentaje": porcentaje,
-        "dls_per_cantidad": dls_kg
+        "dls_per_cantidad": dls_kg,
+        "ieps": ieps,
+        "total": total,
+        "iva": iva
     }
 
 #bg = basegravable(entradas)
