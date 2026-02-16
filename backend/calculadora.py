@@ -53,6 +53,8 @@ def basegravable(entradas):
         ieps = 6.7*float(entradas.cantidad)
     elif fracc == "0403.20.01":
         ieps = (base_grav*25)/100
+    else:
+        ieps = 0
 
     if ieps != 0:
         total = (((float(base_grav)+float(ieps))*16.00)/100) + (float(base_grav)+float(ieps))

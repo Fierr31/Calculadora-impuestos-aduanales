@@ -1,6 +1,7 @@
 const input = document.getElementById("productoInput");
 const lista = document.getElementById("sugerencias");
 let productoSeleccionado = null;
+const seccionResultado = document.getElementById("resultado");
 
 let timeout = null;
 
@@ -152,4 +153,9 @@ document.getElementById("calcularBtn").addEventListener("click", async () => {
     document.getElementById("iva").textContent = data.iva.toFixed(2);
 
     document.getElementById("baseg").style.display = "block";
+
+    setTimeout(() => {
+    seccionResultado.scrollIntoView({ behavior: "smooth" });
+    }, 200);
+
 });
