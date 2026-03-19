@@ -1,1 +1,10 @@
-pip install qlalchemy psycopg2
+sqlalchemy
+psycopg2
+fastapi
+uvicorn
+langchain
+langchain-google-genai
+langchain-tavily
+langgraph
+tavily-python
+python-dotenv

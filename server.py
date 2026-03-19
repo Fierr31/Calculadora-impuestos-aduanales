@@ -1,6 +1,10 @@
+from dotenv import load_dotenv
+load_dotenv()
+
 from backend.sugerencias import autocompletado
 from backend.consulta import obtener
 from backend.calculadora import basegravable
+from backend.agente import chat_con_agente
 from fastapi import FastAPI, Query, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
@@ -53,3 +57,16 @@ class DatosEntrada(BaseModel):
 def calcular(datos: DatosEntrada):
     calculos = basegravable(datos)
     return calculos
+
+
+# ── Chatbot ──────────────────────────────────────────────────────────
+class ChatInput(BaseModel):
+    mensaje: str = Field(..., min_length=1, max_length=2000)
+
+@app.post("/chat")
+async def chat(data: ChatInput):
+    try:
+        respuesta = await chat_con_agente(data.mensaje)
+        return {"respuesta": respuesta}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error del agente: {str(e)}")
