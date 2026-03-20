@@ -1,12 +1,21 @@
 from backend.sugerencias import autocompletado
 from backend.consulta import obtener
 from backend.calculadora import basegravable
+from backend.chat_agent import AduanalChatAgent
 from fastapi import FastAPI, Query, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
-from typing import Annotated
+from typing import Annotated, Optional
 
 app = FastAPI()
+chat_agent: Optional[AduanalChatAgent] = None
+
+
+def get_chat_agent() -> AduanalChatAgent:
+    global chat_agent
+    if chat_agent is None:
+        chat_agent = AduanalChatAgent()
+    return chat_agent
 
 # Permitir peticiones desde frontend
 app.add_middleware(
@@ -49,7 +58,18 @@ class DatosEntrada(BaseModel):
     impuesto: str
     fracc: str
 
+class ChatRequest(BaseModel):
+    message: Annotated[str, Field(min_length=1, max_length=4000, strip_whitespace=True)]
+
 @app.post("/calcular")
 def calcular(datos: DatosEntrada):
     calculos = basegravable(datos)
     return calculos
+
+@app.post("/chat")
+def chat(payload: ChatRequest):
+    try:
+        result = get_chat_agent().run(payload.message)
+        return result
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"No se pudo generar respuesta: {str(e)}")

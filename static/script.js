@@ -159,3 +159,106 @@ document.getElementById("calcularBtn").addEventListener("click", async () => {
     }, 200);
 
 });
+
+const chatToggleBtn = document.getElementById("chatToggleBtn");
+const chatSidebar = document.getElementById("chatSidebar");
+const chatCloseBtn = document.getElementById("chatCloseBtn");
+const chatForm = document.getElementById("chatForm");
+const chatInput = document.getElementById("chatInput");
+const chatMessages = document.getElementById("chatMessages");
+
+function setChatOpen(isOpen) {
+    if (!chatSidebar) return;
+    chatSidebar.classList.toggle("open", isOpen);
+    chatSidebar.setAttribute("aria-hidden", isOpen ? "false" : "true");
+}
+
+function appendMessage(text, role = "bot") {
+    if (!chatMessages) return;
+    const bubble = document.createElement("div");
+    bubble.className = `chat-message ${role}`;
+    bubble.textContent = typeof text === "string" ? text : String(text);
+    chatMessages.appendChild(bubble);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+function normalizeAnswer(answer) {
+    if (typeof answer === "string") return answer;
+
+    if (Array.isArray(answer)) {
+        return answer
+            .map((item) => {
+                if (typeof item === "string") return item;
+                if (item && typeof item === "object" && typeof item.text === "string") return item.text;
+                return "";
+            })
+            .filter(Boolean)
+            .join("\n")
+            .trim();
+    }
+
+    if (answer && typeof answer === "object") {
+        if (typeof answer.text === "string") return answer.text;
+        try {
+            return JSON.stringify(answer, null, 2);
+        } catch (_) {
+            return "Respuesta recibida en formato no soportado.";
+        }
+    }
+
+    return "No se recibio una respuesta valida.";
+}
+
+function appendLoadingMessage() {
+    if (!chatMessages) return null;
+    const loading = document.createElement("div");
+    loading.className = "chat-message bot loading";
+    loading.textContent = "Escribiendo...";
+    chatMessages.appendChild(loading);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+    return loading;
+}
+
+if (chatToggleBtn) {
+    chatToggleBtn.addEventListener("click", () => setChatOpen(true));
+}
+
+if (chatCloseBtn) {
+    chatCloseBtn.addEventListener("click", () => setChatOpen(false));
+}
+
+if (chatForm) {
+    chatForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const message = chatInput.value.trim();
+
+        if (!message) return;
+
+        appendMessage(message, "user");
+        chatInput.value = "";
+
+        const loadingNode = appendLoadingMessage();
+
+        try {
+            const response = await fetch("http://localhost:8000/chat", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ message })
+            });
+
+            const data = await response.json();
+            if (loadingNode) loadingNode.remove();
+
+            if (!response.ok) {
+                appendMessage(data.detail || "Hubo un error al consultar el asistente.", "bot");
+                return;
+            }
+
+            const botAnswer = normalizeAnswer(data.answer);
+            appendMessage(botAnswer || "No se recibio una respuesta.", "bot");
+        } catch (error) {
+            if (loadingNode) loadingNode.remove();
+            appendMessage("No fue posible conectar con el servidor del chat.", "bot");
+        }
+    });
+}

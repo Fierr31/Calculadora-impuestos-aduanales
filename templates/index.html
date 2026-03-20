@@ -186,6 +186,34 @@
 
     </div>
 
+    <button id="chatToggleBtn" class="chat-toggle-btn" type="button" aria-label="Abrir chat">
+      Chat
+    </button>
+
+    <aside id="chatSidebar" class="chat-sidebar" aria-hidden="true">
+      <div class="chat-header">
+        <h4>Asistente Aduanal</h4>
+        <button id="chatCloseBtn" class="chat-close-btn" type="button" aria-label="Cerrar chat">x</button>
+      </div>
+
+      <div id="chatMessages" class="chat-messages">
+        <div class="chat-message bot">
+          Hola, soy tu asistente. Preguntame sobre impuestos, fracciones o proceso de importacion.
+        </div>
+      </div>
+
+      <form id="chatForm" class="chat-input-row">
+        <input
+          id="chatInput"
+          type="text"
+          placeholder="Escribe tu pregunta..."
+          autocomplete="off"
+          maxlength="4000"
+        />
+        <button id="chatSendBtn" type="submit">Enviar</button>
+      </form>
+    </aside>
+
     <script src="../static/script.js"></script>
   </body>
 </html>
