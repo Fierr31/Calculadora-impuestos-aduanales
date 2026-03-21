@@ -6,6 +6,8 @@ from backend.consulta import obtener
 from backend.calculadora import basegravable
 from backend.agente import chat_con_agente
 from fastapi import FastAPI, Query, HTTPException
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 from typing import Annotated
@@ -23,6 +25,13 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Montar archivos estáticos (CSS, JS)
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
+@app.get("/")
+async def root():
+    return FileResponse("templates/index.html")
 
 @app.get("/autocomplete")
 def autocomplete(q: str = Query(..., min_length=1, max_length=50)):

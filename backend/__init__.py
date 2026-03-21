@@ -1,3 +1,4 @@
-from . import sugerencias
-from . import consulta
-from . import calculadora
+from .sugerencias import autocompletado
+from .consulta import obtener
+from .calculadora import basegravable
+from .agente import chat_con_agente
