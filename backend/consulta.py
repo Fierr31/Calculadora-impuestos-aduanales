@@ -5,9 +5,16 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-engine = create_engine(
-os.getenv("DATABASE_URL")
-)
+_engine = None
+
+def _get_engine():
+    global _engine
+    if _engine is None:
+        db_url = os.getenv("DATABASE_URL")
+        if not db_url:
+            raise RuntimeError("DATABASE_URL no está configurada")
+        _engine = create_engine(db_url)
+    return _engine
 
 def obtener(id):
     #print("ID recibido:", id)
@@ -19,7 +26,7 @@ def obtener(id):
         LIMIT 1
     """)
 
-    with engine.connect() as conn:
+    with _get_engine().connect() as conn:
         result = conn.execute(query, {"id": id})
         row = result.mappings().first()
 
