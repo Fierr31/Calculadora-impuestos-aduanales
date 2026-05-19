@@ -4,7 +4,7 @@
 (function () {
   "use strict";
 
-  const API_URL = "http://localhost:8000/chat";
+  const API_URL = "/chat";
 
   // ── Crear el DOM del widget ──────────────────────────────────────
   function crearWidget() {

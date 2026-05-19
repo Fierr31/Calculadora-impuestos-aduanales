@@ -1,7 +1,7 @@
 sqlalchemy
-psycopg2
+psycopg2-binary
 fastapi
-uvicorn
+uvicorn[standard]
 langchain
 langchain-google-genai
 langchain-tavily
