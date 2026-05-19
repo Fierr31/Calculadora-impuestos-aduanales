@@ -1,8 +1,19 @@
+# Entorno
 .env
+.venv/
 
+# Python
 __pycache__/
 *.pyc
+*.pyo
 
+# IDE
+.vscode/
+.idea/
+
+# Base de datos local
 db/
 
-.venv
+# OS
+.DS_Store
+Thumbs.db

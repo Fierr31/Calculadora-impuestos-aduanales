@@ -12,15 +12,17 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 from typing import Annotated
 
+import os
+
 app = FastAPI()
 
 # Permitir peticiones desde frontend
+# En producción (Railway) se permite el dominio asignado
+ALLOWED_ORIGINS = os.getenv("ALLOWED_ORIGINS", "http://127.0.0.1:5500,http://localhost:5500")
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://127.0.0.1:5500",
-        "http://localhost:5500",
-    ],
+    allow_origins=[o.strip() for o in ALLOWED_ORIGINS.split(",")],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -32,6 +34,10 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 @app.get("/")
 async def root():
     return FileResponse("templates/index.html")
+
+@app.get("/health")
+async def health():
+    return {"status": "ok"}
 
 @app.get("/autocomplete")
 def autocomplete(q: str = Query(..., min_length=1, max_length=50)):

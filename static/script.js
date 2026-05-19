@@ -25,7 +25,7 @@ input.addEventListener("input", () => {
     // Debounce: espera 300ms antes de consultar
     clearTimeout(timeout);
     timeout = setTimeout(() => {
-        fetch(`http://localhost:8000/autocomplete?q=${encodeURIComponent(valor)}`)
+        fetch(`/autocomplete?q=${encodeURIComponent(valor)}`)
             .then(response => response.json())
             .then(data => {
                 lista.innerHTML = "";
@@ -51,7 +51,7 @@ input.addEventListener("input", () => {
 });
 
 function obtenerProducto(id) {
-    fetch(`http://localhost:8000/producto/${id}`)
+    fetch(`/producto/${id}`)
         .then(response => response.json())
         .then(data => {
             console.log("Respuesta backend:", data);
@@ -115,7 +115,7 @@ document.getElementById("calcularBtn").addEventListener("click", async () => {
 }
 
 
-    const response = await fetch("http://localhost:8000/calcular", {
+    const response = await fetch("/calcular", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
